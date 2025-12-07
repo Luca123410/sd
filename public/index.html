@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviathan - Configurator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ea; /* Cyan Elettrico */
+            --primary-dim: #009893;
+            --accent: #ffffff;
+            --bg-deep: #050a14; /* Blu Abisso */
+            --bg-panel: rgba(13, 22, 40, 0.85);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --glow: 0 0 25px rgba(0, 242, 234, 0.3);
+            --shadow-deep: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* --- BACKGROUND ONDE ANIMATE AVANZATE --- */
+        .ocean {
+            height: 15%;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to bottom, transparent, #015871);
+            z-index: -1;
+            overflow: hidden;
+        }
+        .wave {
+            background: ur[](https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+            position: absolute;
+            top: -198px;
+            width: 6400px;
+            height: 198px;
+            animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            transform: translate3d(0, 0, 0);
+            filter: drop-shadow(0 10px 20px rgba(0, 242, 234, 0.2));
+        }
+        .wave:nth-of-type(2) {
+            top: -175px;
+            animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 7s ease -1.25s infinite;
+            opacity: 0.8;
+        }
+        .wave:nth-of-type(3) {
+            top: -150px;
+            animation: wave 9s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.25s infinite, swell 8s ease -1.5s infinite;
+            opacity: 0.6;
+        }
+        @keyframes wave {
+            0% { margin-left: 0; }
+            100% { margin-left: -1600px; }
+        }
+        @keyframes swell {
+            0%, 100% { transform: translate3d(0,-25px,0); }
+            50% { transform: translate3d(0,5px,0); }
+        }
+        /* Effetto particelle dinamiche */
+        .particles {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: radial-gradient(#00f2ea 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            z-index: -2;
+            animation: particles-float 20s linear infinite;
+        }
+        @keyframes particles-float {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+        /* Bolle che salgono */
+        .bubbles {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(0, 242, 234, 0.1);
+            border-radius: 50%;
+            animation: rise 10s infinite ease-in;
+            box-shadow: 0 0 10px rgba(0, 242, 234, 0.2);
+        }
+        .bubble:nth-child(1) { left: 10%; width: 40px; height: 40px; animation-duration: 8s; animation-delay: 1s; }
+        .bubble:nth-child(2) { left: 20%; width: 20px; height: 20px; animation-duration: 10s; animation-delay: 2s; }
+        .bubble:nth-child(3) { left: 30%; width: 30px; height: 30px; animation-duration: 9s; animation-delay: 0s; }
+        .bubble:nth-child(4) { left: 40%; width: 50px; height: 50px; animation-duration: 7s; animation-delay: 3s; }
+        .bubble:nth-child(5) { left: 50%; width: 25px; height: 25px; animation-duration: 11s; animation-delay: 4s; }
+        .bubble:nth-child(6) { left: 60%; width: 35px; height: 35px; animation-duration: 8s; animation-delay: 2s; }
+        .bubble:nth-child(7) { left: 70%; width: 45px; height: 45px; animation-duration: 10s; animation-delay: 1s; }
+        .bubble:nth-child(8) { left: 80%; width: 15px; height: 15px; animation-duration: 12s; animation-delay: 5s; }
+        .bubble:nth-child(9) { left: 90%; width: 55px; height: 55px; animation-duration: 6s; animation-delay: 0s; }
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        /* --- CONTAINER PRINCIPALE --- */
+        .container {
+            width: 100%;
+            max-width: 950px;
+            padding: 50px;
+            margin: 30px;
+            z-index: 10;
+            position: relative;
+        }
+        /* --- HEADER & LOGO --- */
+        header { text-align: center; margin-bottom: 50px; }
+       
+        .logo-wrapper {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #0b1c36, #00384d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--primary);
+            box-shadow: var(--glow), 0 0 60px rgba(0, 242, 234, 0.5);
+            animation: float 5s ease-in-out infinite, pulse-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 40px rgba(0, 242, 234, 0.3); } 100% { box-shadow: 0 0 70px rgba(0, 242, 234, 0.6); } }
+        .logo-icon { font-size: 4rem; color: #fff; filter: drop-shadow(0 0 15px var(--primary)); animation: rotate-slight 20s linear infinite; }
+        @keyframes rotate-slight { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 5rem;
+            margin: 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            background: linear-gradient(to right, #fff, var(--primary), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px var(--primary);
+            animation: text-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes text-glow { 0% { text-shadow: 0 10px 40px rgba(0,0,0,0.6); } 100% { text-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 30px var(--primary); } }
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            margin-top: -5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        /* --- FEATURE BOX (Stile Avanzato) --- */
+        .feature-box {
+            background: linear-gradient(to bottom, rgba(8, 14, 28, 0.9), rgba(8, 14, 28, 0.7));
+            border: 1px solid rgba(0, 242, 234, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow-deep), inset 0 0 30px rgba(0, 242, 234, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: fade-in 1s ease-out;
+        }
+        @keyframes fade-in { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .feature-box::before {
+            content: ''; position: absolute; top:0; left:0; width: 100%; height: 4px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            animation: scan-line 3s linear infinite;
+        }
+        @keyframes scan-line { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .feature-header {
+            color: var(--primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 242, 234, 0.4);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px 50px;
+        }
+        .feature-item {
+            font-size: 1rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: transform 0.3s;
+        }
+        .feature-item:hover { transform: translateX(5px); color: #fff; }
+       
+        .feature-bullet { color: var(--primary); font-size: 1.4rem; line-height: 1; animation: bullet-pulse 2s infinite; }
+        @keyframes bullet-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .feature-item strong { color: #fff; font-weight: 600; }
+        /* --- CONFIG SECTION --- */
+        .config-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 50px;
+            box-shadow: var(--shadow-deep);
+            animation: fade-in 1.5s ease-out;
+        }
+        .section-label {
+            text-align: center;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .section-label::before, .section-label::after { content:''; height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); flex: 1; }
+        /* SERVICE SELECTOR */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .service-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .service-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 30px rgba(0, 242, 234, 0.2); }
+       
+        .service-card.active {
+            border-color: var(--primary);
+            background: rgba(0, 242, 234, 0.15);
+            box-shadow: 0 0 25px rgba(0, 242, 234, 0.3) inset, 0 10px 30px rgba(0, 242, 234, 0.2);
+        }
+        .service-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; transition: transform 0.3s; }
+        .service-card:hover .service-icon { transform: rotate(360deg); }
+        .service-name { font-weight: 700; font-size: 1rem; letter-spacing: 1px; }
+        /* INPUTS */
+        .input-wrapper { position: relative; margin-bottom: 30px; }
+       
+        input[type="text"] {
+            width: 100%;
+            padding: 20px 20px;
+            padding-right: 150px; /* Space for the button */
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            transition: 0.4s;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 242, 234, 0.3); background: rgba(0,0,0,0.5); }
+        .api-link-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 242, 234, 0.2);
+            color: var(--primary);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid rgba(0, 242, 234, 0.4);
+        }
+        .api-link-btn:hover { background: var(--primary); color: #000; transform: translateY(-50%) scale(1.05); }
+        /* SWITCHES */
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .option-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: background 0.3s;
+        }
+        .option-item:hover { background: rgba(255,255,255,0.1); }
+        .switch { position: relative; display: inline-block; width: 48px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #1e293b; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        /* INSTALL BUTTON */
+        .install-btn {
+            width: 100%;
+            padding: 25px;
+            background: linear-gradient(to right, var(--primary), #00b3aa);
+            color: #000;
+            border: none;
+            border-radius: 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 40px rgba(0, 242, 234, 0.4), inset 0 0 20px rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .install-btn:hover {
+            background: linear-gradient(to right, #fff, var(--primary));
+            box-shadow: 0 15px 60px rgba(255, 255, 255, 0.5);
+            transform: translateY(-4px) scale(1.02);
+        }
+        @media(max-width: 700px) {
+            .features-grid, .options-list { grid-template-columns: 1fr; }
+            h1 { font-size: 3.5rem; }
+            .container { padding: 25px; margin: 15px; }
+            .wave { height: 120px; }
+            .service-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles"></div>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    <div class="container">
+        <header>
+            <div class="logo-wrapper">
+                <i class="fas fa-dragon logo-icon"></i> </div>
+            <h1>LEVIATHAN</h1>
+            <p class="subtitle">Deep Sea Streaming Core</p>
+        </header>
+        <div class="feature-box">
+            <div class="feature-header">Caratteristiche Principali:</div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-bullet">✦</span>
+                    <div><strong>Multi-Sorgente:</strong> Database Locale + Cache Debrid Reale + Motori Smart.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">✦</span>
+                    <div><strong>Debrid Ready:</strong> Supporto Nativo per Real-Debrid, TorBox e AllDebrid.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">✦</span>
+                    <div><strong>Ottimizzato ITA:</strong> Priorità assoluta ai contenuti audio/sub italiani.</div>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-bullet">✦</span>
+                    <div><strong>Fall-Back Sicuro:</strong> Gestione intelligente dei link P2P e Cache.</div>
+                </div>
+            </div>
+        </div>
+        <div class="config-panel">
+            <div class="section-label">1. Seleziona Servizio</div>
+            <div class="service-grid">
+                <div class="service-card active" onclick="selectService('rd')">
+                    <span class="service-icon">🚀</span>
+                    <span class="service-name">Real-Debrid</span>
+                </div>
+                <div class="service-card" onclick="selectService('ad')">
+                    <span class="service-icon">🦅</span>
+                    <span class="service-name">AllDebrid</span>
+                </div>
+                <div class="service-card" onclick="selectService('tb')">
+                    <span class="service-icon">📦</span>
+                    <span class="service-name">TorBox</span>
+                </div>
+            </div>
+            <div class="input-wrapper">
+                <input type="text" id="apiKey" placeholder="Incolla la tua API Key qui...">
+                <a href="https://real-debrid.com/apitoken" target="_blank" id="apiLink" class="api-link-btn">
+                    <i class="fas fa-key"></i> PRENDI KEY
+                </a>
+            </div>
+            <div class="input-wrapper">
+                <input type="text" id="tmdbKey" placeholder="TMDB API Key (Metadati)">
+                <a href="https://www.themoviedb.org/settings/api" target="_blank" class="api-link-btn">
+                    <i class="fas fa-database"></i> PRENDI KEY
+                </a>
+            </div>
+            <div class="section-label">2. Personalizza</div>
+            <div class="options-list">
+                <div class="option-item">
+                    <span>Solo Materiale ITA</span>
+                    <label class="switch"><input type="checkbox" id="onlyIta"><span class="slider"></span></label>
+                </div>
+                <div class="option-item">
+                    <span>Rimuovi 4K</span>
+                    <label class="switch"><input type="checkbox" id="no4k"><span class="slider"></span></label>
+                </div>
+                <div class="option-item">
+                    <span>Rimuovi CAM/Screener</span>
+                    <label class="switch"><input type="checkbox" id="noCam" checked><span class="slider"></span></label>
+                </div>
+                <div class="option-item">
+                    <span>Mostra P2P/Fake</span>
+                    <label class="switch"><input type="checkbox" id="showFake"><span class="slider"></span></label>
+                </div>
+            </div>
+            <button class="install-btn" onclick="install()">
+                INSTALLA LEVIATHAN <i class="fas fa-bolt"></i>
+            </button>
+        </div>
+    </div>
+    <script>
+        let currentService = 'rd';
+        function selectService(service) {
+            currentService = service;
+           
+            // UI Updates
+            document.querySelectorAll('.service-card').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const link = document.getElementById('apiLink');
+            const input = document.getElementById('apiKey');
+            if(service === 'rd') {
+                link.href = "https://real-debrid.com/apitoken";
+                input.placeholder = "Incolla qui la tua Key Real-Debrid...";
+            } else if(service === 'ad') {
+                link.href = "https://alldebrid.com/apikeys";
+                input.placeholder = "Incolla qui la tua Key AllDebrid...";
+            } else if(service === 'tb') {
+                link.href = "https://torbox.app/settings";
+                input.placeholder = "Incolla qui la tua Key TorBox...";
+            }
+        }
+        function install() {
+            const key = document.getElementById('apiKey').value.trim();
+            const tmdb = document.getElementById('tmdbKey').value.trim();
+            if(!key || !tmdb) {
+                alert("⚠️ ATTENZIONE: Mancano le chiavi API!\n\nInserisci sia la chiave del servizio Debrid che la chiave TMDB.");
+                return;
+            }
+            const config = {
+                service: currentService,
+                key: key,
+                tmdb: tmdb,
+                filters: {
+                    onlyIta: document.getElementById('onlyIta').checked,
+                    no4k: document.getElementById('no4k').checked,
+                    noCam: document.getElementById('noCam').checked,
+                    showFake: document.getElementById('showFake').checked
+                }
+            };
+            const configStr = btoa(JSON.stringify(config));
+            const host = window.location.host;
+            window.location.href = `stremio://${host}/${configStr}/manifest.json`;
+        }
+    </script>
+</body>
+</html>
